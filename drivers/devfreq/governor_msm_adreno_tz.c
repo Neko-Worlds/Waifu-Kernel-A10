@@ -153,7 +153,6 @@ static ssize_t suspend_time_show(struct device *dev,
 	return snprintf(buf, PAGE_SIZE, "%llu\n", time_diff);
 }
 static DEVICE_ATTR(adrenoboost, 0644, adrenoboost_show, adrenoboost_save);
-static DEVICE_ATTR(adrenoboost, 0644, adrenoboost_show, adrenoboost_save);
 static DEVICE_ATTR(gpu_load, 0444, gpu_load_show, NULL);
 
 static DEVICE_ATTR(suspend_time, 0444,
