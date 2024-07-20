@@ -876,7 +876,7 @@ int smblib_set_fastcharge_mode(struct smb_charger *chg, bool enable)
 		enable = false;
 #endif
 
-	/*if soc > 90 do not set fastcharge flag*/
+	/*if soc > 150 do not set fastcharge flag*/
 	rc = power_supply_get_property(chg->bms_psy,
 			POWER_SUPPLY_PROP_CAPACITY, &pval);
 	if (rc < 0) {
@@ -884,12 +884,12 @@ int smblib_set_fastcharge_mode(struct smb_charger *chg, bool enable)
 		goto set_term;
 	}
 
-	if (enable && pval.intval >= 90) {
-		smblib_dbg(chg, PR_MISC, "soc:%d is more than 90"
+	if (enable && pval.intval >= 150) {
+		smblib_dbg(chg, PR_MISC, "soc:%d is more than 150"
 			"do not setfastcharge mode\n", pval.intval);
 		enable = false;
 	}
-	/*if temp > 480 or temp < 150 do not set fastcharge flag*/
+	/*if temp > 1000 or temp < 150 do not set fastcharge flag*/
 	rc = power_supply_get_property(chg->bms_psy,
 					POWER_SUPPLY_PROP_TEMP, &pval);
 	if (rc < 0) {
@@ -897,7 +897,7 @@ int smblib_set_fastcharge_mode(struct smb_charger *chg, bool enable)
 			return rc;
 	}
 
-	if (enable && (pval.intval >= 480 || pval.intval <= 150)) {
+	if (enable && (pval.intval >= 1000 || pval.intval <= 150)) {
 			smblib_dbg(chg, PR_MISC, "temp:%d is abort"
 							"do not setfastcharge mode\n", pval.intval);
 			enable = false;
@@ -1534,6 +1534,7 @@ static int smblib_get_pulse_cnt(struct smb_charger *chg, int *count)
 #define USBIN_2000MA	2000000
 #define USBIN_2500MA	2500000
 #define USBIN_3000MA	3000000
+#define USBIN_4000MA    4000000
 
 static int set_sdp_current(struct smb_charger *chg, int icl_ua)
 {
@@ -1542,9 +1543,9 @@ static int set_sdp_current(struct smb_charger *chg, int icl_ua)
 	const struct apsd_result *apsd_result = smblib_get_apsd_result(chg);
 
 #ifdef CONFIG_FORCE_FAST_CHARGE
-	if (force_fast_charge > 0 && icl_ua == USBIN_2500MA)
+	if (force_fast_charge > 0)
 	{
-		icl_ua = USBIN_3000MA;
+		icl_ua = USBIN_4000MA;
 	}
 #endif
 
@@ -1585,6 +1586,10 @@ static int set_sdp_current(struct smb_charger *chg, int icl_ua)
 		break;
 	case USBIN_3000MA:
 		/* USB 3.0 3000mA */
+		icl_options = CFG_USB3P0_SEL_BIT | USB51_MODE_BIT;
+		break;
+	case USBIN_4000MA:
+		/* USB 3.0 4000mA */
 		icl_options = CFG_USB3P0_SEL_BIT | USB51_MODE_BIT;
 		break;
 	default:
@@ -2339,7 +2344,7 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 		 */
 		if (smblib_is_jeita_warm_charging(chg))
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-		else if ((usb_online || vbus_now > 4000000) && (batt_temp > -100) && (batt_temp < 580) &&
+		else if ((usb_online || vbus_now > 4000000) && (batt_temp > -100) && (batt_temp < 1000) &&
                      (POWER_SUPPLY_HEALTH_OVERHEAT != batt_health) && (POWER_SUPPLY_HEALTH_OVERVOLTAGE != batt_health)) {
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		} else
@@ -2366,7 +2371,7 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 	}
 
 	if(POWER_SUPPLY_HEALTH_WARM == batt_health && (val->intval == POWER_SUPPLY_STATUS_FULL) &&
-		((batt_capa.intval <= 99) && usb_online) && (batt_temp > -100)  && (batt_temp < 580))  {
+		((batt_capa.intval <= 99) && usb_online) && (batt_temp > -100)  && (batt_temp < 1000))  {
 		val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		return 0;
 	}
@@ -2392,9 +2397,9 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 
     if (!stat){
 		if(POWER_SUPPLY_HEALTH_WARM == batt_health&& (val->intval == POWER_SUPPLY_STATUS_FULL)&&
-			((batt_capa.intval <= 99) && usb_online) && (batt_temp > -100)  && (batt_temp < 580)) {
+			((batt_capa.intval <= 99) && usb_online) && (batt_temp > -100)  && (batt_temp < 1000)) {
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-		}else if ((usb_online || vbus_now > 4000000) && (batt_temp > -100) && (batt_temp < 580) &&
+		}else if ((usb_online || vbus_now > 4000000) && (batt_temp > -100) && (batt_temp < 1000) &&
 	                     (POWER_SUPPLY_HEALTH_OVERHEAT != batt_health) && (POWER_SUPPLY_HEALTH_OVERVOLTAGE != batt_health)) {
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		} else {
@@ -2474,10 +2479,10 @@ int smblib_get_prop_batt_health(struct smb_charger *chg,
                                 smblib_err(chg, "Couldn't get bms temp:%d\n", rc);
                                 return rc;
                         }
-                        if (pval.intval>151 && pval.intval<480){
+                        if (pval.intval>151 && pval.intval<600){
                                 smblib_dbg(chg, PR_MISC, "temp:%d is abort"
                                            "do not  set step charge work\n", pval.intval);
-                                effective_fv_uv = 4480000;
+                                effective_fv_uv = 6000000;
                         }else{
                                 effective_fv_uv = get_effective_result_locked(chg->fv_votable);
                         }
@@ -6186,7 +6191,7 @@ static int check_reduce_fcc_condition(struct smb_charger *chg)
 		return 0;
 
 	ibat = val.intval/1000;
-	if (ibat > -450) {
+	if (ibat > -600) {
 		pr_info("Skip CHG ESR, Fails IBAT ibat(%d)\n", ibat);
 		return 0;
 	}
@@ -8316,7 +8321,7 @@ static void smblib_six_pin_batt_step_chg_work(struct work_struct *work)
 		return;
 	}
 
-	/*if temp > 480 or temp < 150 do not set step charge work */
+	/*if temp > 1000 or temp < 150 do not set step charge work */
 	rc = power_supply_get_property(chg->bms_psy,
 					POWER_SUPPLY_PROP_TEMP, &pval);
 	if (rc < 0) {
@@ -8324,7 +8329,7 @@ static void smblib_six_pin_batt_step_chg_work(struct work_struct *work)
 		return;
 	}
 
-	if  (pval.intval >= 480 || pval.intval <= 150) {
+	if  (pval.intval >= 1000 || pval.intval <= 150) {
 		smblib_dbg(chg, PR_MISC, "temp:%d is abort"
 						"do not  set step charge work\n", pval.intval);
 		if (is_client_vote_enabled(chg->fv_votable,
