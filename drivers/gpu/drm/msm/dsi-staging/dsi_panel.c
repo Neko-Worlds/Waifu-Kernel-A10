@@ -1485,7 +1485,7 @@ static int dsi_panel_parse_dfps_caps(struct dsi_panel *panel)
 		}
 	} else {
 		/* HACK: hardcode supported refresh rates */
-		dfps_caps->dfps_list_len = 2;
+		dfps_caps->dfps_list_len = 3;
 	}
 
 	dfps_caps->dfps_list = kcalloc(dfps_caps->dfps_list_len, sizeof(u32),
@@ -1510,6 +1510,7 @@ static int dsi_panel_parse_dfps_caps(struct dsi_panel *panel)
 	} else {
 		dfps_caps->dfps_list[0] = 60;
 		dfps_caps->dfps_list[1] = 90;
+		dfps_caps->dfps_list[2] = 120;
 	}
 
 	dfps_caps->dfps_support = true;
