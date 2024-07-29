@@ -630,6 +630,7 @@ static unsigned int
 osm_cpufreq_fast_switch(struct cpufreq_policy *policy, unsigned int target_freq)
 {
 	int index;
+	unsigned int relation;
 
 	relation = target_freq < policy->max ? CPUFREQ_RELATION_L :
 					       CPUFREQ_RELATION_H;
