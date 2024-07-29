@@ -29,21 +29,21 @@ static DEFINE_SPINLOCK(tz_lock);
 static DEFINE_SPINLOCK(sample_lock);
 static DEFINE_SPINLOCK(suspend_lock);
 /*
- * FLOOR is 5msec to capture up to 3 re-draws
+ * FLOOR is 0.1msec to capture up to 3 re-draws
  * per frame for 60fps content.
  */
-#define FLOOR		        5000
+#define FLOOR		        100
 /*
- * MIN_BUSY is 1 msec for the sample to be sent
+ * MIN_BUSY is 0.1 msec for the sample to be sent
  */
-#define MIN_BUSY		1000
+#define MIN_BUSY		100
 #define MAX_TZ_VERSION		0
 
 /*
- * CEILING is 50msec, larger than any standard
+ * CEILING is 1 msec, larger than any standard
  * frame length, but less than the idle timer.
  */
-#define CEILING			50000
+#define CEILING			1000
 #define TZ_RESET_ID		0x3
 #define TZ_UPDATE_ID		0x4
 #define TZ_INIT_ID		0x6
@@ -60,7 +60,7 @@ static DEFINE_SPINLOCK(suspend_lock);
 #define TAG "msm_adreno_tz: "
 
 #if 1
-static unsigned int adrenoboost = 2;
+static unsigned int adrenoboost = 1;
 #endif
 
 static u64 suspend_time;
@@ -100,8 +100,8 @@ static ssize_t adrenoboost_save(struct device *dev,
 {
 	int input;
 	sscanf(buf, "%d ", &input);
-	if (input < 1 || input > 3) {
-		adrenoboost = 3;
+	if (input < 0 || input > 3) {
+		adrenoboost = 0;
 	} else {
 		adrenoboost = input;
 	}
