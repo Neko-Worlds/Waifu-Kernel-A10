@@ -614,7 +614,7 @@
 				};
 
 				/* XO */
-				qcom,gpu-pwrlevel@8 {
+				qcom,gpu-pwrlevel@9 {
 					reg = <9>;
 					qcom,gpu-freq = <0>;
 					qcom,bus-freq = <0>;
