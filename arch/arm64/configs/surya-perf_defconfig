@@ -3,6 +3,7 @@
 # Linux/arm64 4.14.117 Kernel Configuration
 
 # KernelSU
+CONFIG_IS_HW_HISI=y
 CONFIG_KSU=y
 # CONFIG_KSU_DEBUG is not set
 
