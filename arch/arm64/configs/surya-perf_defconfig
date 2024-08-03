@@ -2,6 +2,10 @@
 # Automatically generated file; DO NOT EDIT.
 # Linux/arm64 4.14.117 Kernel Configuration
 
+# KernelSU
+CONFIG_KSU=y
+# CONFIG_KSU_DEBUG is not set
+
 #
 # FORCE FASTCHARGE
 #
