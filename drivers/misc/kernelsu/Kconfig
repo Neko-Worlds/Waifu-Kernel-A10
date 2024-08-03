@@ -9,13 +9,6 @@ config KSU
 	  To compile as a module, choose M here: the
 	  module will be called kernelsu.
 
-config IS_HW_HISI
-    bool "KernelSU Support A10"
-    depends on KSU
-    default y
-    help
-      Enable KernelSU Support Android 10
-
 config KSU_DEBUG
 	bool "KernelSU debug mode"
 	depends on KSU
