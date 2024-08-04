@@ -1543,9 +1543,9 @@ static int set_sdp_current(struct smb_charger *chg, int icl_ua)
 	const struct apsd_result *apsd_result = smblib_get_apsd_result(chg);
 
 #ifdef CONFIG_FORCE_FAST_CHARGE
-	if (force_fast_charge > 0 && icl_ua == USBIN_1000MA)
+	if (force_fast_charge > 0)
 	{
-		icl_ua = USBIN_3000MA;
+		icl_ua = USBIN_4000MA;
 	}
 #endif
 
@@ -2344,7 +2344,7 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 		 */
 		if (smblib_is_jeita_warm_charging(chg))
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-		else if ((usb_online || vbus_now > 6000000) && (batt_temp > -100) && (batt_temp < 1000) &&
+		else if ((usb_online || vbus_now > 4000000) && (batt_temp > -100) && (batt_temp < 1000) &&
                      (POWER_SUPPLY_HEALTH_OVERHEAT != batt_health) && (POWER_SUPPLY_HEALTH_OVERVOLTAGE != batt_health)) {
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		} else
@@ -2399,7 +2399,7 @@ int smblib_get_prop_batt_status(struct smb_charger *chg,
 		if(POWER_SUPPLY_HEALTH_WARM == batt_health&& (val->intval == POWER_SUPPLY_STATUS_FULL)&&
 			((batt_capa.intval <= 99) && usb_online) && (batt_temp > -100)  && (batt_temp < 1000)) {
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
-		}else if ((usb_online || vbus_now > 6000000) && (batt_temp > -100) && (batt_temp < 1000) &&
+		}else if ((usb_online || vbus_now > 4000000) && (batt_temp > -100) && (batt_temp < 1000) &&
 	                     (POWER_SUPPLY_HEALTH_OVERHEAT != batt_health) && (POWER_SUPPLY_HEALTH_OVERVOLTAGE != batt_health)) {
 			val->intval = POWER_SUPPLY_STATUS_CHARGING;
 		} else {
@@ -6584,7 +6584,7 @@ static int qc3p5_authenticate(struct smb_charger *chg)
 
 	chg->qc3p5_authenticated = false;
 	chg->qc3p5_authentication_started = true;
-	chg->qc3p5_power_limit_w = 18;//Default to lowest power limit of 18W
+	chg->qc3p5_power_limit_w = 40;//Default to lowest power limit of 40W
 
 	/* Set ICL to 500mA during QC3.5 Authentication */
 	vote(chg->usb_icl_votable, QC3P5_VOTER, true, USBIN_500MA);
@@ -6664,7 +6664,7 @@ static int qc3p5_authenticate(struct smb_charger *chg)
 	if ((vbus_uv >= VBUS_6P65_V_UV)
 			&& (vbus_uv <= VBUS_7P35_V_UV))
 		chg->qc3p5_power_limit_w = 18;
-	/* SRC CAP 8V for 33W */
+	/* SRC CAP 8V for 27W */
 	else if ((vbus_uv >= VBUS_7P6_V_UV)
 			&& (vbus_uv <= VBUS_8P4_V_UV))
 		chg->qc3p5_power_limit_w = 27;
@@ -6812,16 +6812,16 @@ static void smblib_raise_qc3_vbus_work(struct work_struct *work)
 }
 
 struct quick_charge adapter_cap[] = {
-	{ POWER_SUPPLY_TYPE_USB,        QUICK_CHARGE_FAST },
-	{ POWER_SUPPLY_TYPE_USB_DCP,    QUICK_CHARGE_FAST },
-	{ POWER_SUPPLY_TYPE_USB_CDP,    QUICK_CHARGE_FAST },
-	{ POWER_SUPPLY_TYPE_USB_ACA,    QUICK_CHARGE_FAST },
-	{ POWER_SUPPLY_TYPE_USB_FLOAT,  QUICK_CHARGE_FAST },
-	{ POWER_SUPPLY_TYPE_USB_PD,       QUICK_CHARGE_TURBE },
-	{ POWER_SUPPLY_TYPE_USB_HVDCP,    QUICK_CHARGE_TURBE },
-	{ POWER_SUPPLY_TYPE_USB_HVDCP_3,  QUICK_CHARGE_TURBE },
-	{ POWER_SUPPLY_TYPE_USB_HVDCP_3P5,QUICK_CHARGE_TURBE },
-	{ POWER_SUPPLY_TYPE_WIRELESS,     QUICK_CHARGE_TURBE },
+	{ POWER_SUPPLY_TYPE_USB,        QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_DCP,    QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_CDP,    QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_ACA,    QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_FLOAT,  QUICK_CHARGE_NORMAL },
+	{ POWER_SUPPLY_TYPE_USB_PD,       QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_USB_HVDCP,    QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_USB_HVDCP_3,  QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_USB_HVDCP_3P5,QUICK_CHARGE_FAST },
+	{ POWER_SUPPLY_TYPE_WIRELESS,     QUICK_CHARGE_FAST },
 	{0, 0},
 };
 
@@ -7506,7 +7506,7 @@ static void typec_src_removal(struct smb_charger *chg)
 	chg->qc3p5_authenticated = false;
 	chg->qc3p5_auth_complete = false;
 	chg->qc3p5_authentication_started = false;
-	chg->qc3p5_power_limit_w = 27;
+	chg->qc3p5_power_limit_w = 18;
 
 	/*
 	 * if non-compliant charger caused UV, restore original max pulses
