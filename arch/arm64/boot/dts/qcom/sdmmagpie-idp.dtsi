@@ -416,16 +416,16 @@
 	qcom,qg-ext-sns;
 	mi,software-optimize-ffc-qg-iterm;
 	qcom,soc_decimal_rate = <
-		0  32
-		10 30
-		20 28
-		30 28
-		40 28
-		50 28
-		60 28
-		70 28
-		80 28
-		90 26
+		0  40
+		10 40
+		20 40
+		30 40
+		40 40
+		50 40
+		60 40
+		70 40
+		80 30
+		90 28
 		95 10
 		99 5>;
 	qcom,qg-fast-chg-config;
@@ -448,7 +448,7 @@
 			   "sbux_res",
 			   "vph_voltage";
 	qcom,battery-data = <&mtp_batterydata>;
-	qcom,usb-icl-ua = <3000000>;
+	qcom,usb-icl-ua = <6000000>;
 	qcom,auto-recharge-soc = <99>;
 	qcom,fcc-max-ua = <6000000>;
 	qcom,fv-max-uv = <4480000>;
@@ -460,15 +460,12 @@
 	qcom,sec-charger-config = <0>;
 	qcom,thermal-mitigation = <6000000 5500000 4900000 4600000 4500000 4400000 4200000
 				   3800000 3800000 3600000 3400000 3200000 3000000 2200000
-				   800000 700000 600000 500000 400000 300000 200000 100000
-				   90000 80000 70000 60000 50000 40000 30000 20000 10000
-				   90000 80000 70000 60000 50000 40000 30000 20000 10000
-				   9000 8000 7000 6000 5000 4000 3000 2000 1000>;
+				   800000 700000>;
 	dpdm-supply = <&qusb_phy0>;
-	qcom,charger-temp-max = <1500>;
-	qcom,smb-temp-max = <1500>;
-	qcom,fcc-step-delay-ms = <1000>;
-	qcom,fcc-step-size-ua = <400000>;
+	qcom,charger-temp-max = <999900>;
+	qcom,smb-temp-max = <999900>;
+	qcom,fcc-step-delay-ms = <000>;
+	qcom,fcc-step-size-ua = <6000000>;
 	qcom,disable-sw-thermal-regulation;
 	qcom,disable-fcc-restriction;
 	qcom,smb-internal-pull-kohm = <0>;
