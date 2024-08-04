@@ -28,8 +28,8 @@
         cp_qc30 {
                 compatible = "xiaomi,cp-qc30";
                 status = "ok";
-                mi,qc3-bat-volt-max = <4480>;
-                mi,qc3-ffc-bat-volt-max = <5400>;
+                mi,qc3-bat-volt-max = <4450>;
+                mi,qc3-ffc-bat-volt-max = <4480>;
                 mi,qc3-bat-curr-max = <6000>;
                 mi,qc3-bus-volt-max = <12000>;
                 mi,qc3-bus-curr-max = <6000>;
@@ -39,8 +39,8 @@
 	usbpd_pm {
 		compatible = "xiaomi,usbpd-pm";
 		status = "ok";
-		mi,pd-bat-volt-max = <4480>;
-		mi,pd-ffc-bat-volt-max = <5400>;
+		mi,pd-bat-volt-max = <4450>;
+		mi,pd-ffc-bat-volt-max = <4480>;
 		mi,pd-bat-curr-max = <6000>;
 		mi,pd-bus-volt-max = <12000>;
 		mi,pd-bus-curr-max = <6000>;
@@ -394,7 +394,7 @@
 };
 
 &sde_dp {
-	qcom,dp-aux-switch = <&fsa5400>;
+	qcom,dp-aux-switch = <&fsa4480>;
 };
 
 &pm6150_qg {
@@ -451,7 +451,7 @@
 	qcom,usb-icl-ua = <6000000>;
 	qcom,auto-recharge-soc = <99>;
 	qcom,fcc-max-ua = <6000000>;
-	qcom,fv-max-uv = <5400000>;
+	qcom,fv-max-uv = <4480000>;
 	qcom,chg-term-src = <1>;
 	qcom,chg-term-current-ma = <(-3000)>;
 	qcom,sw-jeita-enable;
@@ -488,7 +488,7 @@
 &pm6150_pdphy {
 	mi,non-qcom-pps-ctrl;
 	mi,pd_curr_limit = <1>;
-	mi,pd_max_curr_limit = <4480000>;
+	mi,pd_max_curr_limit = <4000000>;
 	mi,limit_pd_unverified_pps_vbus = <1>;
 	mi,pd_unverified_pps_max_vbus_limit = <9500000>;
 };
