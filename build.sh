@@ -24,10 +24,9 @@ if ! [ -d "$TC_DIR" ]; then
 	wget -nv -c https://github.com/greenforce-project/greenforce_clang/releases/download/26122023/greenforce-clang-12.0.1-26122023-1149.tar.zst -O - | tar --use-compress-program=unzstd -xf - -C "$TC_DIR/"
 	cd ../..
 fi
-ls
 
 echo -e "\nStarting compilation...\n"
-make $DEFCONFIG
+make $DEFCONFIG O=out
 make -j$(nproc --all) O=out \
     ARCH=arm64 \
     SUBARCH=arm64 \
