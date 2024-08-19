@@ -44,7 +44,6 @@ make -j$(nproc --all) O=out \
 
 
 kernel="out/arch/arm64/boot/Image.gz-dtb"
-dtb="out/arch/arm64/boot/dtb.img"
 dtbo="out/arch/arm64/boot/dtbo.img"
 
 if [ -f "$kernel" ]; then
@@ -55,7 +54,7 @@ if [ -f "$kernel" ]; then
 		echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 		exit 1
 	fi
-	cp $kernel $dtb $dtbo AnyKernel3
+	cp $kernel $dtbo AnyKernel3
 	cd AnyKernel3
 	git checkout FSociety &> /dev/null
 	zip -r9 "../$ZIPNAME" * -x .git modules\* patch\* ramdisk\* README.md *placeholder
