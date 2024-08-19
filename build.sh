@@ -43,7 +43,7 @@ make -j$(nproc --all) O=out \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
 
-kernel="arch/arm64/boot/Image.gz-dtb"
+kernel="out/arch/arm64/boot/Image.gz-dtb"
 dtb="out/arch/arm64/boot/dtb.img"
 dtbo="out/arch/arm64/boot/dtbo.img"
 
