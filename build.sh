@@ -43,11 +43,11 @@ make -j$(nproc --all) O=out \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
 
-kernel="out/arch/arm64/boot/Image.gz"
+kernel="arch/arm64/boot/Image.gz-dtb"
 dtb="out/arch/arm64/boot/dtb.img"
 dtbo="out/arch/arm64/boot/dtbo.img"
 
-if [ -f "$kernel" ] && [ -f "$dtb" ] && [ -f "$dtbo" ]; then
+if [ -f "$kernel" ]; then
 	echo -e "\nKernel compiled succesfully! Zipping up...\n"
 	if [ -d "$AK3_DIR" ]; then
 		cp -r $AK3_DIR AnyKernel3
